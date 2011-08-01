@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:stretchColumns="1">
+
+	<TableRow android:layout_width="fill_parent"
+		android:background="@color/header">
+		<TextView android:id="@+id/date" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:textSize="18dp"
+			android:textColor="@color/night_text" android:padding="2dp"
+			android:visibility="gone" />
+	</TableRow>
+
+	<TableRow>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:padding="4dp">
+
+			<ImageView android:id="@+id/icon" android:layout_width="48dp"
+				android:layout_height="fill_parent" android:layout_marginRight="2dp"
+				android:scaleType="fitStart" />
+
+			<TableLayout android:collapseColumns="2"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:id="@+id/forecast_details" android:stretchColumns="*">
+				<TableRow>
+					<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+						android:id="@+id/time" android:layout_height="wrap_content"
+						android:textSize="15dp" android:width="120dp">
+					</TextView>
+					<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+						android:id="@+id/wind_speed" android:layout_height="wrap_content"
+						android:textSize="15dp">
+					</TextView>
+				</TableRow>
+				<TableRow>
+					<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+						android:id="@+id/temp" android:layout_height="wrap_content"
+						android:textSize="15dp" android:width="120dp">
+					</TextView>
+					<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+						android:id="@+id/precipitation" android:layout_height="wrap_content"
+						android:textSize="15dp">
+					</TextView>
+				</TableRow>
+			</TableLayout>
+		</LinearLayout>
+	</TableRow>
+</TableLayout>

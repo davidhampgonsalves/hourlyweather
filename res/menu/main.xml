@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/refresh_loc" android:icon="@drawable/refresh"
+		android:title="refresh location" android:scaleType="centerInside"/>
+	<item android:id="@+id/temp_conf" android:icon="@drawable/temp"
+		android:title="temperature unit" android:scaleType="centerInside"/>
+	<item android:id="@+id/measurement_system_conf" android:icon="@drawable/measurement"
+		android:title="measurement system" android:scaleType="centerInside"/>
+</menu>
