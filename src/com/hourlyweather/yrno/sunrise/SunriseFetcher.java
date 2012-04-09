@@ -18,18 +18,11 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import com.hourlyweather.forecast.HourlyForecast;
 import com.hourlyweather.yrno.XmlParserUtil;
 
-/**
- * Gets the Sunrise times for your current location using the YR.NO weather
- * service
- * 
- * @author dhgonsalves
- * 
- */
 public class SunriseFetcher {
     private static final DateTimeFormatter df = DateTimeFormat.forPattern(
 	    "YYYY-MM-dd'T'HH:mm:SS'Z'").withZone(DateTimeZone.UTC);
 
-    public static boolean addSunlightDurationToForecast(HourlyForecast forecast) {
+    public static void addSunlightDurationToForecast(HourlyForecast forecast) {
 	XmlPullParser xpp;
 	try {
 	    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -37,12 +30,10 @@ public class SunriseFetcher {
 	    xpp = factory.newPullParser();
 	} catch (XmlPullParserException e) {
 	    System.out.println("error creating xml parser: " + e.getMessage());
-	    return false;
+	    return;
 	}
 
 	InputStream input = getSunriseData(forecast);
-	if (input == null)
-	    return false;
 	try {
 	    xpp.setInput(new BufferedReader(new InputStreamReader(input)));
 	    int eventType = xpp.getEventType();
@@ -56,10 +47,8 @@ public class SunriseFetcher {
 		    String setString = XmlParserUtil.getAttributeByName(xpp,
 			    "set");
 		    if (riseString != null && setString != null) {
-			DateTime rise = df.parseDateTime(riseString).withZone(
-				DateTimeZone.getDefault());
-			DateTime set = df.parseDateTime(setString).withZone(
-				DateTimeZone.getDefault());
+			DateTime rise = df.parseDateTime(riseString).withZone(forecast.getTimeZone());
+			DateTime set = df.parseDateTime(setString).withZone(forecast.getTimeZone());
 			setSunStateTimesToForecast(forecast, rise, set);
 		    }
 		    break;
@@ -71,8 +60,6 @@ public class SunriseFetcher {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-
-	return true;
     }
 
     private static DateTime roundToTheHour(DateTime rise) {

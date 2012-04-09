@@ -22,13 +22,6 @@ import com.hourlyweather.forecast.HourlyForecast;
 import com.hourlyweather.yrno.XmlParserUtil;
 import com.hourlyweather.yrno.sunrise.SunriseFetcher;
 
-/**
- * Pulls and builds an hourly forecast from the YR.NO weather service for the
- * given location
- * 
- * @author dhgonsalves
- * 
- */
 public class ForecastFetcher {
     private static final DateTimeFormatter df = DateTimeFormat.forPattern(
 	    "YYYY-MM-dd'T'HH':00:00Z'").withZone(DateTimeZone.UTC);
@@ -69,11 +62,9 @@ public class ForecastFetcher {
      * @return
      */
     public static boolean getHourlyForecast(HourlyForecast forecast) {
-	// add the sun rise/set times to the forecast and abort if error
-	if (!SunriseFetcher.addSunlightDurationToForecast(forecast)) {
-	    System.out.println("Sunrise couldn't be pulled");
-	    return false;
-	}
+	// add the sun rise/set times to the forecast
+	SunriseFetcher.addSunlightDurationToForecast(forecast);
+
 	InputStream input = getHourlyForecastData(forecast);
 
 	DateTime endWindow;
@@ -132,21 +123,15 @@ public class ForecastFetcher {
 	    HourlyForecast forecast) throws XmlPullParserException,
 	    IOException, ParseException {
 
-	DateTimeZone zone;
-	if (forecast.getTimezoneOffset() == null)
-	    zone = DateTimeZone.getDefault();
-	else
-	    zone = DateTimeZone.forOffsetHours(forecast.getTimezoneOffset());
-
 	DateTime from = df.parseDateTime(
-		XmlParserUtil.getAttributeByName(xpp, "from")).withZone(zone);
+		XmlParserUtil.getAttributeByName(xpp, "from")).withZone(forecast.getTimeZone());
 
 	// check if we are at the end of our time range
 	if (from.isAfter(endWindow))
 	    return false;
 
 	DateTime to = df.parseDateTime(
-		XmlParserUtil.getAttributeByName(xpp, "to")).withZone(zone);
+		XmlParserUtil.getAttributeByName(xpp, "to")).withZone(forecast.getTimeZone());
 
 	// parse the child elements of the time element for the forecast details
 	ForecastHour forecastHour = new ForecastHour();
@@ -176,9 +161,6 @@ public class ForecastFetcher {
 	return true;
     }
 
-    /**
-     * returns the windspeed from the textual representation
-     */
     private static Double getWindSpeed(DateTime from, DateTime to,
 	    String windSpeedString) {
 
@@ -197,8 +179,13 @@ public class ForecastFetcher {
     }
 
     /**
-     * gets the precipitation per hour based on the span and the converted
+     * gets the percipitation per hour based on the span and the converted
      * precipitation string
+     * 
+     * @param from
+     * @param to
+     * @param precipitationString
+     * @return
      */
     private static Double getPrecipitation(DateTime from, DateTime to,
 	    String precipitationString) {

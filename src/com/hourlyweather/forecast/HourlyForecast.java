@@ -6,43 +6,44 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Hours;
 
-/**
- * Storage object for an hourly forecast
- * 
- * @author dhgonsalves
- * 
- */
 public class HourlyForecast implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    
     Double lat, lon;
 
     ForecastHour[] forecastHours;
     DateTime start;
     int hours;
-    Integer timezoneOffset;
+    DateTimeZone timeZone;
 
     public HourlyForecast(double lat, double lon, DateTime start, int hours) {
 	this.lat = lat;
 	this.lon = lon;
 	this.start = start;
 	this.hours = hours;
-	timezoneOffset = null;
+	timeZone = DateTimeZone.getDefault();
 
 	forecastHours = new ForecastHour[hours];
     }
 
-    public HourlyForecast(double lat, double lon, DateTime start, int hours,
-	    Integer timezoneOffset) {
+    public HourlyForecast(double lat, double lon, DateTime start, int hours, DateTimeZone timeZone) {
 	this(lat, lon, start, hours);
-
-	if (timezoneOffset != null) {
-	    this.timezoneOffset = timezoneOffset;
-	    this.start = start.withZone(DateTimeZone
-		    .forOffsetHours(timezoneOffset));
+	
+	if(timeZone != null) {
+	    this.timeZone = timeZone;
+	    this.start = start.withZone(timeZone);
 	}
     }
-
+    
+    public HourlyForecast(double lat, double lon, DateTime start, int hours, Integer timeZoneOffset) {
+	this(lat, lon, start, hours);
+	
+	if(timeZoneOffset != null) {
+	    timeZone = DateTimeZone.forOffsetHours(timeZoneOffset);
+	    this.start = start.withZone(timeZone);
+	}
+    }
+    
     public Double getLat() {
 	return lat;
     }
@@ -82,9 +83,9 @@ public class HourlyForecast implements Serializable {
     public void setHours(int hours) {
 	this.hours = hours;
     }
-
-    public Integer getTimezoneOffset() {
-	return timezoneOffset;
+    
+    public DateTimeZone getTimeZone() {
+	return timeZone;
     }
 
     public int getSize() {
@@ -105,10 +106,6 @@ public class HourlyForecast implements Serializable {
 
 	// if the hour falls outside the forecast then return -1
 	return Hours.hoursBetween(start, dateTime).getHours();
-    }
-
-    public ForecastHour[] getHourlyForecast() {
-	return forecastHours;
     }
 
     public void set(int i, ForecastHour forecastHour) {
@@ -149,7 +146,7 @@ public class HourlyForecast implements Serializable {
 	for (int i = spanStartIndex; i <= spanEndIndex; i++)
 	    if (forecastHours[i] == null)
 		forecastHours[i] = forecastHour;
-	    else
+	    else 
 		forecastHours[i] = new ForecastHour(forecastHours[i],
 			forecastHour);
     }

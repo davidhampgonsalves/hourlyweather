@@ -24,7 +24,7 @@ import com.hourlyweather.util.ForecastIconUtil;
  * 
  * @author dhgonsalves
  * 
- */
+ */ 
 public class ForecastListAdapter extends ArrayAdapter<ForecastHour> {
 
     private HourlyForecast forecast;

@@ -1,13 +1,8 @@
 package com.hourlyweather.forecast;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
-/**
- * Storage object for a single hour of the weather forecast
- * 
- * @author dhgonsalves
- * 
- */
 public class ForecastHour implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -15,6 +10,27 @@ public class ForecastHour implements Serializable {
     private Double precipitation, windSpeed;
     private String symbol;
     private Boolean isSunUp;
+    
+    private static final HashMap<String, Integer> symbolCodes;
+    
+    static {
+	symbolCodes = new HashMap<String, Integer>(); 
+	symbolCodes.put("SUN", 1);
+	symbolCodes.put("LIGHTCLOUD", 2);
+	symbolCodes.put("PARTLYCLOUD", 3);
+	symbolCodes.put("CLOUD", 4);
+	symbolCodes.put("LIGHTRAINSUN", 5);
+	symbolCodes.put("LIGHTRAINTHUNDERSUN", 6);
+	symbolCodes.put("SLEETSUN", 7);
+	symbolCodes.put("SNOWSUN", 8);
+	symbolCodes.put("LIGHTRAIN", 9);
+	symbolCodes.put("RAIN", 10);
+	symbolCodes.put("RAINTHUNDER", 11);
+	symbolCodes.put("SLEET", 12);
+	symbolCodes.put("SNOW", 13);
+	symbolCodes.put("SNOWTHUNDER", 14);
+	symbolCodes.put("FOG", 15);
+    }
 
     public ForecastHour() {
 	precipitation = null;
@@ -63,6 +79,10 @@ public class ForecastHour implements Serializable {
 
     public String getSymbol() {
 	return symbol;
+    }
+    
+    public int getSymbolCode() {
+	return symbolCodes.get(symbol);
     }
 
     public void setSymbol(String symbol) {
